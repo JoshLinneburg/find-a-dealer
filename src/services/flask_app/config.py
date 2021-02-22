@@ -30,7 +30,7 @@ class Config(object):
     TESTING = os.environ.get("TESTING") or False
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "SQLALCHEMY_DATABASE_URI"
-    ) or "sqlite:///" + os.path.join(basedir, "app.db")
+    ) or "postgresql://postgres:password@127.0.0.1:5432"
     SQLALCHEMY_TRACK_MODIFICATIONS = (
         os.environ.get("SQLALCHEMY_TRACK_MODIFICATIONS") or False
     )
