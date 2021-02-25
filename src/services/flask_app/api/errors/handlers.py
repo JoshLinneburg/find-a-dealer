@@ -100,21 +100,3 @@ def revoked_token_callback():
         ),
         401,
     )
-
-
-@jwt.claims_verification_failed_loader
-def verify_claims_failed_callback():
-    """
-    By default, if the user claims verification failed, we return a generic
-    error message with a 400 status code
-    """
-    return (
-        jsonify(
-            {
-                "status_code": 400,
-                "status_text": "NOT OK!",
-                "message": "User claims verification failed!",
-            }
-        ),
-        400,
-    )
