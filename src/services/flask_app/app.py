@@ -12,4 +12,4 @@ app = create_app()
 cli = FlaskGroup(app)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    cli()
