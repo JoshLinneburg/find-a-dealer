@@ -54,35 +54,35 @@ def create_new_dealer():
     db.session.add(new_dealer)
     db.session.flush()
 
-    if "sales_hours" in data.keys():
+    if data.get("sales_hours", None):
         for entry in data["sales_hours"]:
             new_hours = Dealer_Hours(
                 public_id=str(uuid.uuid4()),
                 dealer_id=new_dealer.id,
                 day_of_week=entry["day_of_week"],
-                open_time=datetime.time.fromisoformat(entry["open"]),
-                close_time=datetime.time.fromisoformat(entry["close"]),
+                open_time=datetime.time.fromisoformat(entry["open"]) if entry["open"] else None,
+                close_time=datetime.time.fromisoformat(entry["close"]) if entry["close"] else None,
                 schedule_type="sales",
             )
 
             db.session.add(new_hours)
         db.session.flush()
 
-    if "service_hours" in data.keys():
+    if data.get("service_hours", None):
         for entry in data["service_hours"]:
             new_hours = Dealer_Hours(
                 public_id=str(uuid.uuid4()),
                 dealer_id=new_dealer.id,
                 day_of_week=entry["day_of_week"],
-                open_time=datetime.time.fromisoformat(entry["open"]),
-                close_time=datetime.time.fromisoformat(entry["close"]),
+                open_time=datetime.time.fromisoformat(entry["open"]) if entry["open"] else None,
+                close_time=datetime.time.fromisoformat(entry["close"]) if entry["close"] else None,
                 schedule_type="service",
             )
 
             db.session.add(new_hours)
         db.session.flush()
 
-    if "services" in data.keys():
+    if data.get("services", None):
         for entry in data["services"]:
             service = Service.query.filter(Service.service_name == entry).first()
 
