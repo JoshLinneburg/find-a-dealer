@@ -6,8 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
-#PyCharm
+# PyCharm
 *.idea
+
+# VS Code
+*.code-workspace
 
 # Tutorial
 tut_app.py
