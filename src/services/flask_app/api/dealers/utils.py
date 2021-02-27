@@ -2,7 +2,7 @@ import datetime
 import uuid
 
 from api import db
-from api.models import Dealer, Dealer_Hours, Dealer_Service, Service
+from api.models import Dealer, DealerHours, DealerService, Service
 from src.services.flask_app.app import app  # TODO: REMOVE - USED ONLY FOR APP.APP_CONTEXT()
 from sqlalchemy import and_, or_
 from typing import Dict, List, Type
@@ -60,7 +60,7 @@ def create_new_dealer_hours(
     results = []
 
     for entry in hours:
-        new_hours = Dealer_Hours(
+        new_hours = DealerHours(
             public_id=str(uuid.uuid4()),
             dealer_id=dealer.id,
             day_of_week=entry["day_of_week"],
@@ -102,7 +102,7 @@ def create_new_dealer_service(
         if not service:
             service = create_new_service(service_name=service)
 
-        new_dealer_service = Dealer_Service(
+        new_dealer_service = DealerService(
             dealer_id=dealer.id,
             service_id=service.id,
         )

@@ -2,7 +2,7 @@ import datetime
 import uuid
 
 from api import db
-from api.models import Dealer, Dealer_Hours, Dealer_Service, Service
+from api.models import Dealer, DealerHours, DealerService, Service
 from api.schemas import DealerSchema, HoursSchema, ServiceSchema, DealerServiceSchema
 from flask import Blueprint, make_response, jsonify, request
 from sqlalchemy import or_, and_
@@ -56,7 +56,7 @@ def create_new_dealer():
 
     if data.get("sales_hours", None):
         for entry in data["sales_hours"]:
-            new_hours = Dealer_Hours(
+            new_hours = DealerHours(
                 public_id=str(uuid.uuid4()),
                 dealer_id=new_dealer.id,
                 day_of_week=entry["day_of_week"],
@@ -70,7 +70,7 @@ def create_new_dealer():
 
     if data.get("service_hours", None):
         for entry in data["service_hours"]:
-            new_hours = Dealer_Hours(
+            new_hours = DealerHours(
                 public_id=str(uuid.uuid4()),
                 dealer_id=new_dealer.id,
                 day_of_week=entry["day_of_week"],
@@ -95,7 +95,7 @@ def create_new_dealer():
                 db.session.add(service)
                 db.session.flush()
 
-            new_dealer_service = Dealer_Service(
+            new_dealer_service = DealerService(
                 dealer_id=new_dealer.id,
                 service_id=service.id,
             )

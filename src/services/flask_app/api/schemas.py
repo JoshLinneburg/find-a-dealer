@@ -1,5 +1,5 @@
 from api import ma
-from api.models import Dealer, Service, Dealer_Service, Dealer_Hours
+from api.models import Dealer, Service, DealerHours, DealerService
 from marshmallow import fields
 
 
@@ -38,7 +38,7 @@ class DealerSchema(ma.Schema):
 class HoursSchema(ma.Schema):
     class Meta:
 
-        model = Dealer_Hours
+        model = DealerHours
 
         fields = (
             "day_of_week",

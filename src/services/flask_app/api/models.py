@@ -62,7 +62,7 @@ class Service(db.Model):
     )
 
 
-class Dealer_Service(db.Model):
+class DealerService(db.Model):
     __tablename__ = "dealer_service"
 
     dealer_id = Column(
@@ -78,7 +78,7 @@ class Dealer_Service(db.Model):
     )
 
 
-class Dealer_Hours(db.Model):
+class DealerHours(db.Model):
     __tablename__ = "dealer_hours"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
