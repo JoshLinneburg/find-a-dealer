@@ -3,7 +3,7 @@ from api.models import Dealer, Service, DealerHours, DealerService
 from marshmallow import fields
 
 
-class DealerSchema(ma.Schema):
+class DealerOutputSchema(ma.Schema):
     class Meta:
 
         model = Dealer

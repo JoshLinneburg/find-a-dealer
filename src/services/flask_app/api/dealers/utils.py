@@ -3,7 +3,6 @@ import uuid
 
 from api import db
 from api.models import Dealer, DealerHours, DealerService, Service
-from src.services.flask_app.app import app  # TODO: REMOVE - USED ONLY FOR APP.APP_CONTEXT()
 from sqlalchemy import and_, or_
 from typing import Dict, List, Type
 
@@ -20,12 +19,12 @@ def get_dealer_if_exists(
             Dealer.email == email,
             and_(Dealer.latitude == latitude, Dealer.longitude == longitude)
         )
-    ).first()
+    ).all()
 
     return response
 
 
-def create_new_dealer(
+def create_dealer(
         input_data: Dict,
 ):
     new_dealer = Dealer(
@@ -38,8 +37,8 @@ def create_new_dealer(
         state=input_data["state"],
         postal_code=input_data["postal_code"],
         country=input_data["country"].upper(),
-        latitude=input_data["latitude"],
-        longitude=input_data["longitude"],
+        latitude=float(input_data["latitude"]),
+        longitude=float(input_data["longitude"]),
         phone=input_data["phone"],
         email=input_data["email"],
         website=input_data["url"]
@@ -51,8 +50,8 @@ def create_new_dealer(
     return new_dealer
 
 
-def create_new_dealer_hours(
-        dealer: Dealer,
+def create_dealer_hours(
+        dealer_id: int,
         hours: List[Dict],
         hours_type: str
 ):
@@ -62,7 +61,7 @@ def create_new_dealer_hours(
     for entry in hours:
         new_hours = DealerHours(
             public_id=str(uuid.uuid4()),
-            dealer_id=dealer.id,
+            dealer_id=dealer_id,
             day_of_week=entry["day_of_week"],
             open_time=datetime.time.fromisoformat(entry["open"]) if entry["open"] else None,
             close_time=datetime.time.fromisoformat(entry["close"]) if entry["close"] else None,
@@ -76,7 +75,7 @@ def create_new_dealer_hours(
     return results
 
 
-def create_new_service(
+def create_service(
         service_name: str
 ):
     service = Service(
@@ -90,21 +89,21 @@ def create_new_service(
     return service
 
 
-def create_new_dealer_service(
-        dealer: Dealer,
-        services: List[Dict],
+def create_dealer_service(
+        dealer_id: int,
+        services: List,
 ):
     results = []
 
-    for service in services:
-        service = Service.query.filter(Service.service_name == service).first()
+    for service_name in services:
+        response = Service.query.filter(Service.service_name == service_name).first()
 
-        if not service:
-            service = create_new_service(service_name=service)
+        if not response:
+            response = create_service(service_name=service_name)
 
         new_dealer_service = DealerService(
-            dealer_id=dealer.id,
-            service_id=service.id,
+            dealer_id=dealer_id,
+            service_id=response.id,
         )
 
         db.session.add(new_dealer_service)

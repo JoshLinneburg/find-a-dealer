@@ -24,19 +24,19 @@ class Dealer(db.Model):
     website = Column(String(50))
 
     sales_hours = db.relationship(
-        "Dealer_Hours",
-        primaryjoin="and_(Dealer.id==Dealer_Hours.dealer_id, "
-        "Dealer_Hours.schedule_type=='sales')",
+        "DealerHours",
+        primaryjoin="and_(Dealer.id==DealerHours.dealer_id, "
+        "DealerHours.schedule_type=='sales')",
     )
 
     service_hours = db.relationship(
-        "Dealer_Hours",
-        primaryjoin="and_(Dealer.id==Dealer_Hours.dealer_id, "
-        "Dealer_Hours.schedule_type=='service')",
+        "DealerHours",
+        primaryjoin="and_(Dealer.id==DealerHours.dealer_id, "
+        "DealerHours.schedule_type=='service')",
     )
 
     services = db.relationship(
-        "Dealer_Service", backref="dealer", passive_deletes=True
+        "DealerService", backref="dealer", passive_deletes=True
     )
 
     created_datetime = db.Column(db.DateTime, default=datetime.datetime.utcnow)
@@ -53,7 +53,7 @@ class Service(db.Model):
     service_name = Column(String(250), nullable=False)
 
     dealers = db.relationship(
-        "Dealer_Service", backref="service", passive_deletes=True
+        "DealerService", backref="service", passive_deletes=True
     )
 
     created_datetime = db.Column(db.DateTime, default=datetime.datetime.utcnow)
