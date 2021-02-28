@@ -6,17 +6,19 @@ from flask import Blueprint, make_response, jsonify, request
 
 from api import db
 from api.dealers.utils import (
+    get_dealer_by_public_id,
     get_dealer_if_exists,
     create_dealer,
     create_dealer_hours,
     create_dealer_service,
+    return_exception_as_json,
 )
 from api.schemas import DealerOutputSchema
 
 dealers_bp = Blueprint("dealers_bp", __name__, url_prefix="/api/v1/dealers")
 
 
-logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"))
 logger = logging.getLogger()
 logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
@@ -107,5 +109,77 @@ def get_dealers():
 
 
 @dealers_bp.route("/<public_id>", methods=["GET"])
-def get_dealer():
+def get_dealer(public_id):
+    try:
+        dealer = get_dealer_by_public_id(dealer_public_id=public_id)
+        dealer_schema = DealerOutputSchema()
+        dealer_data = dealer_schema.dump(dealer)
+
+        return make_response(
+            jsonify(
+                {
+                    "status_code": 200,
+                    "status_text": "OK!",
+                    "message": "Dealer found and returned!",
+                    "results": dealer_data
+                }
+            ),
+            200
+        )
+
+    except LookupError as e:
+        return return_exception_as_json(
+            exception=e,
+            status_code=404,
+        )
+
+    except Exception as e:
+        db.session.rollback()
+
+        return return_exception_as_json(
+            exception=e,
+            status_code=400,
+        )
+
+
+@dealers_bp.route("/<public_id>", methods=["PUT"])
+def update_dealer(public_id):
+
+    data = request.get_json()
+
+    immutable_fields = [
+        "id",
+        "public_id",
+        "created_datetime",
+        "modified_datetime",
+    ]
+
+    try:
+        dealer = get_dealer_by_public_id(dealer_public_id=public_id)
+
+        for key, value in data.items():
+            if key in immutable_fields:
+                continue
+            else:
+                setattr(dealer, key, value)
+
+        db.session.commit()
+
+    except LookupError as e:
+        return return_exception_as_json(
+            exception=e,
+            status_code=404,
+        )
+
+    except Exception as e:
+        db.session.rollback()
+
+        return return_exception_as_json(
+            exception=e,
+            status_code=400,
+        )
+
+
+@dealers_bp.route("/<public_id>", methods=["DELETE"])
+def delete_dealer(public_id):
     pass

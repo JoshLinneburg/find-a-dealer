@@ -35,6 +35,18 @@ class Dealer(db.Model):
         "DealerHours.schedule_type=='service')",
     )
 
+    parts_hours = db.relationship(
+        "DealerHours",
+        primaryjoin="and_(Dealer.id==DealerHours.dealer_id, "
+                    "DealerHours.schedule_type=='parts')",
+    )
+
+    body_shop_hours = db.relationship(
+        "DealerHours",
+        primaryjoin="and_(Dealer.id==DealerHours.dealer_id, "
+                    "DealerHours.schedule_type=='body')",
+    )
+
     services = db.relationship(
         "DealerService", backref="dealer", passive_deletes=True
     )

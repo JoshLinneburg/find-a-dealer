@@ -1,8 +1,10 @@
 import datetime
+import traceback
 import uuid
 
 from api import db
 from api.models import Dealer, DealerHours, DealerService, Service
+from flask import jsonify, make_response
 from sqlalchemy import and_, or_
 from typing import Dict, List, Type
 
@@ -21,6 +23,19 @@ def get_dealer_if_exists(
             round(Dealer.longitude, 4) == round(longitude, 4),
         )
     ).all()
+
+    return response
+
+
+def get_dealer_by_public_id(
+        dealer_public_id: str
+):
+    response = Dealer.query.filter(
+        Dealer.public_id == dealer_public_id
+    ).first()
+
+    if not response:
+        raise LookupError("Dealer not found!")
 
     return response
 
@@ -111,3 +126,20 @@ def create_dealer_service(
         results.append(new_dealer_service)
 
     return results
+
+
+def return_exception_as_json(
+        exception: Exception,
+        status_code: int,
+        status_text: str = "NOT OK!"
+):
+    return make_response(
+        jsonify(
+            {
+                "status_code": status_code,
+                "status_text": status_text,
+                "message": str(exception),
+            }
+        ),
+        status_code
+    )
