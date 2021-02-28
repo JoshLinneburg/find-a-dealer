@@ -1,7 +1,7 @@
 import datetime
 
 from api import db
-from sqlalchemy import Column, String, Integer, ForeignKey, Float
+from sqlalchemy import Column, String, Integer, ForeignKey, DECIMAL
 
 
 class Dealer(db.Model):
@@ -17,8 +17,8 @@ class Dealer(db.Model):
     state = Column(String(50))
     postal_code = Column(Integer)
     country = Column(String(50))
-    latitude = Column(Float)
-    longitude = Column(Float)
+    latitude = Column(DECIMAL)
+    longitude = Column(DECIMAL)
     phone = Column(String(25))
     email = Column(String(50))
     website = Column(String(50))
