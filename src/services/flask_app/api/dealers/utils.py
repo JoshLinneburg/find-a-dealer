@@ -17,8 +17,8 @@ def get_dealer_if_exists(
         and_(
             Dealer.brand == brand,
             Dealer.internal_id == internal_id,
-            round(Dealer.latitude, 4) == round(latitude, 4),
-            round(Dealer.longitude, 4) == round(longitude, 4),
+            Dealer.latitude - round(latitude, 4) < 0.0001,
+            Dealer.longitude - round(longitude, 4) < 0.0001,
         )
     ).all()
 
