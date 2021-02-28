@@ -5,7 +5,7 @@ import uuid
 from api import db
 from api.models import Dealer, DealerHours, DealerService, Service
 from flask import jsonify, make_response
-from sqlalchemy import and_, or_
+from sqlalchemy import and_, or_, func
 from typing import Dict, List, Type
 
 
@@ -19,10 +19,12 @@ def get_dealer_if_exists(
         and_(
             Dealer.brand == brand,
             Dealer.internal_id == internal_id,
-            Dealer.latitude - round(latitude, 4) < 0.0001,
-            Dealer.longitude - round(longitude, 4) < 0.0001,
+            func.abs(Dealer.latitude - round(float(latitude), 4)) < 0.0001,
+            func.abs(Dealer.longitude - round(float(longitude), 4)) < 0.0001,
         )
     ).all()
+
+    # print(response[0].latitude, response[0].longitude, latitude, longitude)
 
     return response
 
@@ -45,7 +47,7 @@ def create_dealer(
 ):
     new_dealer = Dealer(
         public_id=str(uuid.uuid4()),
-        internal_id=input_data["sales_code"],
+        internal_id=input_data["internal_id"],
         brand=input_data["brand"].upper(),
         name=input_data["name"].upper(),
         street_address=input_data["street_address"].upper(),

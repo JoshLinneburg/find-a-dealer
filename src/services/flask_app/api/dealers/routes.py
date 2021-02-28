@@ -29,10 +29,10 @@ def create_new_dealer():
         data = request.get_json()
 
         dealer = get_dealer_if_exists(
-            brand=data.get("brand"),
+            brand=data.get("brand").upper(),
             internal_id=data.get("internal_id"),
-            latitude=round(float(data.get("latitude", None)), 4),
-            longitude=round(float(data.get("longitude", None)), 4)
+            latitude=data.get("latitude"),
+            longitude=data.get("longitude")
         )
 
         if dealer:
