@@ -1,13 +1,11 @@
+import config
 import datetime
 import logging
 import os
 import unittest
 
-from src.services.flask_app import config
 from api import create_app
 from api import db
-from api.models import Dealer, DealerService, Service
-
 from api.dealers.utils import (
     get_dealer_if_exists,
     create_dealer,
@@ -15,6 +13,7 @@ from api.dealers.utils import (
     create_dealer_hours,
     create_dealer_service,
 )
+from api.models import Dealer, DealerService, Service
 
 logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
 logger = logging.getLogger()
@@ -85,7 +84,7 @@ class TestDealerCreation(unittest.TestCase):
     def test_create_dealer(self) -> None:
 
         input_data = {
-            "sales_code": "12345",
+            "internal_id": "12345",
             "brand": "Ford",
             "name": "Josh Linneburg Ford",
             "email": "joshlinneburg@forddealers.com",
