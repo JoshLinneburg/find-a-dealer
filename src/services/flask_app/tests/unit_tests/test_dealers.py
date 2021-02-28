@@ -56,36 +56,12 @@ class TestDealerCreation(unittest.TestCase):
 
         logger.info("Ran the tearDown method")
 
-    def test_get_dealer_by_phone(self) -> None:
+    def test_get_dealer(self) -> None:
         response = get_dealer_if_exists(
-            phone="(800) 610-3781",
-        )
-
-        self.assertTrue(isinstance(response, list))
-        self.assertTrue(len(response) == 1)
-        self.assertTrue(isinstance(response[0], Dealer))
-        self.assertTrue(hasattr(response[0], "sales_hours"))
-        self.assertTrue(hasattr(response[0], "service_hours"))
-        self.assertTrue(hasattr(response[0], "services"))
-        self.assertEqual(response[0].name, "DEAN ARBOUR FORD OF TAWAS, INC.")
-
-    def test_get_dealer_by_email(self) -> None:
-        response = get_dealer_if_exists(
-            email="tawas@deanarbour.com",
-        )
-
-        self.assertTrue(isinstance(response, list))
-        self.assertTrue(len(response) == 1)
-        self.assertTrue(isinstance(response[0], Dealer))
-        self.assertTrue(hasattr(response[0], "sales_hours"))
-        self.assertTrue(hasattr(response[0], "service_hours"))
-        self.assertTrue(hasattr(response[0], "services"))
-        self.assertEqual(response[0].name, "DEAN ARBOUR FORD OF TAWAS, INC.")
-
-    def test_get_dealer_by_coordinates(self) -> None:
-        response = get_dealer_if_exists(
+            brand="FORD",
+            internal_id="48W610",
             latitude=44.279951,
-            longitude=-83.523281,
+            longitude=-83.523281
         )
 
         self.assertTrue(isinstance(response, list))
@@ -98,8 +74,10 @@ class TestDealerCreation(unittest.TestCase):
 
     def test_get_dealer_when_not_exists(self) -> None:
         response = get_dealer_if_exists(
-            phone="notarealphonenumber",
-            email="notarealemail",
+            brand="FORD",
+            internal_id="FOO",
+            latitude=0.0000,
+            longitude=0.0000
         )
 
         self.assertTrue(not response)

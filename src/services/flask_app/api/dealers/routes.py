@@ -1,4 +1,5 @@
-import sys
+import logging
+import os
 import traceback
 
 from flask import Blueprint, make_response, jsonify, request
@@ -15,16 +16,21 @@ from api.schemas import DealerOutputSchema
 dealers_bp = Blueprint("dealers_bp", __name__, url_prefix="/api/v1/dealers")
 
 
+logging.basicConfig(level=os.environ.get("LOGLEVEL", "INFO"))
+logger = logging.getLogger()
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+
+
 @dealers_bp.route("", methods=["POST"])
 def create_new_dealer():
     try:
         data = request.get_json()
 
         dealer = get_dealer_if_exists(
-            phone=data.get("phone", None),
-            email=data.get("email", None),
-            latitude=data.get("latitude", None),
-            longitude=data.get("longitude", None)
+            brand=data.get("brand"),
+            internal_id=data.get("internal_id"),
+            latitude=round(float(data.get("latitude", None)), 4),
+            longitude=round(float(data.get("longitude", None)), 4)
         )
 
         if dealer:

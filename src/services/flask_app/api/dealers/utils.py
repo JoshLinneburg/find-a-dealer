@@ -8,16 +8,17 @@ from typing import Dict, List, Type
 
 
 def get_dealer_if_exists(
-        phone: str = None,
-        email: str = None,
-        latitude: float = None,
-        longitude: float = None
+        brand: str,
+        internal_id: str,
+        latitude: float,
+        longitude: float,
 ):
     response = Dealer.query.filter(
-        or_(
-            Dealer.phone == phone,
-            Dealer.email == email,
-            and_(Dealer.latitude == latitude, Dealer.longitude == longitude)
+        and_(
+            Dealer.brand == brand,
+            Dealer.internal_id == internal_id,
+            round(Dealer.latitude, 4) == round(latitude, 4),
+            round(Dealer.longitude, 4) == round(longitude, 4),
         )
     ).all()
 
@@ -37,8 +38,8 @@ def create_dealer(
         state=input_data["state"],
         postal_code=input_data["postal_code"],
         country=input_data["country"].upper(),
-        latitude=float(input_data["latitude"]),
-        longitude=float(input_data["longitude"]),
+        latitude=round(float(input_data["latitude"]), 4),
+        longitude=round(float(input_data["longitude"]), 4),
         phone=input_data["phone"],
         email=input_data["email"],
         website=input_data["url"]
@@ -55,7 +56,6 @@ def create_dealer_hours(
         hours: List[Dict],
         hours_type: str
 ):
-
     results = []
 
     for entry in hours:
